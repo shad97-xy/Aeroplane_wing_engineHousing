@@ -22,7 +22,7 @@ documents.add('Part')
 document: PartDocument = application.active_document        # Get active document
 part = document.part                                        # Get Part
 partbody = part.bodies[0]                                   # Get default PartBody by index
-# partbody = part.bodies.item("PartBody")                   # Get default PartBody by name
+# partbody = part.bodies.item("PartBody")                     # Get default PartBody by name
 sketches = partbody.sketches                                # Get sketches on PartBody 
 hybrid_bodies = part.hybrid_bodies                          # Get Hybrid Bodies 
 hsf = part.hybrid_shape_factory                             # Get Hybrid Shape Factory 
@@ -482,8 +482,8 @@ document.part.update()
 mirror_plane = hsf.add_new_plane_offset(plane_YZ, -300, True)
 pbodycockpit1_plane = hsf.add_new_plane_offset(plane_XY, -282, True)
 pbodycockpit2_plane = hsf.add_new_plane_offset(plane_XY, -350, True)
-pbodycockpit3_plane = hsf.add_new_plane_offset(plane_XY, -450, True)
-pbodycockpit4_plane = hsf.add_new_plane_offset(plane_XY, -520, True)
+pbodycockpit3_plane = hsf.add_new_plane_offset(plane_XY, -420, True)
+pbodycockpit4_plane = hsf.add_new_plane_offset(plane_XY, -455, True)
 pbodytailpit5_plane = hsf.add_new_plane_offset(plane_XY, 118, True)
 pbodytailpit6_plane = hsf.add_new_plane_offset(plane_XY, 210, True)
 pbodytailpit7_plane = hsf.add_new_plane_offset(plane_XY, 320, True)
@@ -525,11 +525,11 @@ pCockpit_circle3.name = "fuselagecircle3f"
 pCockpit_circle3.set_limitation(0)
 construction_elements.append_hybrid_shape(pCockpit_circle3)
 
-p_cockpit4 = hsf.add_new_point_coord(299, 88, -470)
+p_cockpit4 = hsf.add_new_point_coord(299, 88, -455)
 p_cockpit4.name = "p11_z"
 construction_elements.append_hybrid_shape(p_cockpit4)
 
-pCockpit_circle4 = hsf.add_new_circle_ctr_rad_with_angles(p_cockpit4, pbodycockpit4_plane, True, 15, 0, 360)
+pCockpit_circle4 = hsf.add_new_circle_ctr_rad_with_angles(p_cockpit4, pbodycockpit4_plane, True, 35, 0, 360)
 pCockpit_circle4.name = "fuselagecircle4f"
 pCockpit_circle4.set_limitation(0)
 construction_elements.append_hybrid_shape(pCockpit_circle4)
@@ -569,6 +569,21 @@ ptailpit_circle8 = hsf.add_new_circle_ctr_rad_with_angles(p_tailpit8, pbodytailp
 ptailpit_circle8.name = "fuselagecircle4r"
 ptailpit_circle8.set_limitation(0)
 construction_elements.append_hybrid_shape(ptailpit_circle8)
+
+
+
+# Create an axis system with default entries (equal to absolute)
+axis_sys1 = part.axis_systems.add()
+ref_axis =  part.create_reference_from_object(axis_sys1)
+
+# Update the document
+document.part.update()
+
+# Arguments : (i_center, i_axis, i_radius, i_begin_parallel_angle, i_end_parallel_angle, i_begin_meridian_angle, i_end_meridian_angle)
+nose = hsf.add_new_sphere(hsf.add_new_point_coord(299, 88, 455), ref_axis, 35, -90, 90, 0, 360)
+nose.limitation = 0 # 0 to specify sphere angles, 1 to fully closed sphere
+construction_elements.append_hybrid_shape(nose)
+
 
 document.part.update()
 ###################################################################
@@ -652,6 +667,7 @@ cockpit = shpfac.add_new_close_surface(cockpit_loft)
 tailpit = shpfac.add_new_close_surface(tailpit_loft)
 body = shpfac.add_new_close_surface(plane_body)
 blade = shpfac.add_new_close_surface(pBlade_loft)
+cnose = shpfac.add_new_close_surface(nose)
 
 document.part.update()
 
@@ -713,6 +729,9 @@ selection.vis_properties.set_real_color(98,122,157,1)
 selection.clear()
 selection.add(prop_front_hub)
 selection.vis_properties.set_real_color(52,52,52,1)
+selection.clear()
+selection.add(cnose)
+selection.vis_properties.set_real_color(160,160,160,1)
 selection.clear()
 ####################################################################
 
